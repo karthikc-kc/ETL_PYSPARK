@@ -26,8 +26,10 @@ class Etl:
         df['col_year'] = pd.to_datetime(df['dob']).dt.year
 
         # Filter records based on the condition (Member_since year is lesser than DOB)
-        filtered_df = df[df['member_since'] < df['col_year']]
-        filtered_df.to_csv(error_file_path)
+        filtered_df = df[df['member_since'] > df['col_year']]
+        error_df = df[df['member_since'] < df['col_year']]
+        error_df.to_csv(error_file_path)
+        return filtered_df
 
 
 if __name__ == '__main__':
@@ -63,11 +65,10 @@ if __name__ == '__main__':
 
     players_transactions = pd.concat([us_soft_df, us_golf_df], ignore_index=True)
 
-    # Error record extraction
-    #TODO : We can include current_date paraemeter for foler and store the error record
+    # Error record extraction &  valid transactions
 
-    error_record = etl.send_to_error(players_transactions,
-                                     error_file_path='/error_records/2023-12-14/error_file.csv')
+    # TODO : We can include current_date paraemeter for folders and store the error record
 
-
+    etl.send_to_error(players_transactions,
+                                  error_file_path='/Users/karthikeyanchandrasekar/Desktop/hinge/error_records/error_file.csv')
 
